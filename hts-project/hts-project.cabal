@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ad4ea799597b599d49163963a9fa213b17a501dcdc4eef03b65aeae554fe60a1
+-- hash: 97d10e1c3362b42131405f894219fe1028810fe463fa52970182a8ffa434e959
 
 name:           hts-project
 version:        0.1.0.0
@@ -31,8 +31,12 @@ library
       Paths_hts_project
   hs-source-dirs:
       src
+  default-extensions: OverloadedStrings
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , lens
+    , wreq
   default-language: Haskell2010
 
 executable hts-project-exe
@@ -44,7 +48,10 @@ executable hts-project-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , hts-project
+    , lens
+    , wreq
   default-language: Haskell2010
 
 test-suite hts-project-test
@@ -57,5 +64,8 @@ test-suite hts-project-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , hts-project
+    , lens
+    , wreq
   default-language: Haskell2010

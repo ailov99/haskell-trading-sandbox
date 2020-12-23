@@ -1,6 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Lib
-    ( someFunc
+    ( wreqHello
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import qualified Data.ByteString.Char8 as ByteString
+import Network.Wreq
+import Control.Lens
+
+wreqHello :: IO ()
+wreqHello = do
+    response <- get "http://httpbin.org/get"
+    ByteString.putStrLn $ response ^. responseHeader "Content-Type"

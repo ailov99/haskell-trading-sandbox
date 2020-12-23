@@ -21,9 +21,16 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- bytestring
+# Web Client
+- wreq
+# API to HTTP messaging
+- lens
 
 library:
   source-dirs: src
+  default-extensions:
+    - OverloadedStrings
 
 executables:
   hts-project-exe:
