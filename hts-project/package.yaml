@@ -22,10 +22,14 @@ description:         Please see the README on GitHub at <https://github.com/aki9
 dependencies:
 - base >= 4.7 && < 5
 - bytestring
+- text
+- containers
 # Web Client
 - wreq
-# API to HTTP messaging
+- aeson
+# Lens
 - lens
+- lens-aeson
 
 library:
   source-dirs: src

@@ -15,7 +15,11 @@ main = do
                     putStrLn "API key not found. Please ensure an env var FinnhubApiKey is defined."
                     return ()
                 else ioError err
-        Right val -> putStrLn $ "Using API Key: " ++ show val
+        Right val -> do
+            putStrLn $ "Using API Key: " ++ show val
+            getCurrentPrice "TSLA" val
+
+    
 
     
 

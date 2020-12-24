@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7454f156841de8b1efa878ec15175f25c30c975823d79dd88cce8621c950e19b
+-- hash: 03a159cf3457dc7fc5a9b19554da0732d2c21da61fc972bd025cd90ca6cb58a7
 
 name:           hts-project
 version:        0.1.0.0
@@ -26,6 +26,7 @@ source-repository head
 
 library
   exposed-modules:
+      JSONTypes
       Lib
   other-modules:
       Paths_hts_project
@@ -33,9 +34,13 @@ library
       src
   default-extensions: OverloadedStrings
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , lens
+    , lens-aeson
+    , text
     , wreq
   default-language: Haskell2010
 
@@ -47,10 +52,14 @@ executable hts-project-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , hts-project
     , lens
+    , lens-aeson
+    , text
     , wreq
   default-language: Haskell2010
 
@@ -63,9 +72,13 @@ test-suite hts-project-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , hts-project
     , lens
+    , lens-aeson
+    , text
     , wreq
   default-language: Haskell2010
