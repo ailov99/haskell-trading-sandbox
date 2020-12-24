@@ -35,6 +35,9 @@ library:
   source-dirs: src
   default-extensions:
     - OverloadedStrings
+    - DeriveGeneric
+    - DuplicateRecordFields
+    - TemplateHaskell
 
 executables:
   hts-project-exe:

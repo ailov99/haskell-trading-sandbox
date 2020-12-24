@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 03a159cf3457dc7fc5a9b19554da0732d2c21da61fc972bd025cd90ca6cb58a7
+-- hash: d9fc06e412b6e2fdfb2c0e2f21ef039b1b366031455766999d572869a9efc20d
 
 name:           hts-project
 version:        0.1.0.0
@@ -32,7 +32,7 @@ library
       Paths_hts_project
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings
+  default-extensions: OverloadedStrings DeriveGeneric DuplicateRecordFields TemplateHaskell
   build-depends:
       aeson
     , base >=4.7 && <5
