@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9fc06e412b6e2fdfb2c0e2f21ef039b1b366031455766999d572869a9efc20d
+-- hash: 41b8cecad259c51dfe8c6dd039cff0d1a6b95d9121f4c0ad1bdaafcf3fc74f06
 
 name:           hts-project
 version:        0.1.0.0
@@ -28,6 +28,7 @@ library
   exposed-modules:
       JSONTypes
       Lib
+      Threading
   other-modules:
       Paths_hts_project
   hs-source-dirs:
@@ -50,7 +51,7 @@ executable hts-project-exe
       Paths_hts_project
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O0
   build-depends:
       aeson
     , base >=4.7 && <5

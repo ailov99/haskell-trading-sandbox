@@ -1,8 +1,11 @@
 module Main where
 
 import System.IO.Error
+import Control.Concurrent (forkIO)
 
 import Lib
+import Threading
+
 
 main :: IO ()
 main = do
@@ -17,12 +20,23 @@ main = do
                     return ()
                 else ioError err
         
-        Right val -> do
+        Right token -> do
             -- If the read was good, use they key for quering the web
-            putStrLn $ "Using API Key: " ++ show val
-            getCurrentPrice "TSLA" val
-            getCompanyProfile "TSLA" val
-            getSupportedStocks "US" "USD" val
+            putStrLn $ "Using API Key: " ++ show token
+
+            -- Threading
+            _ <- forkIO $ doPeriodically 2 getCurrentPrice "TSLA" token
+
+            -- Testing API ...
+            --getCurrentPrice "TSLA" token
+            --getCompanyProfile "TSLA" token
+            -- This one takes a while ...
+            --getSupportedStocks "US" "USD" token
+
+            -- Block for a while
+            sleepSeconds 120
+
+            
 
     
 
