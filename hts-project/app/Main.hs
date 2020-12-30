@@ -25,13 +25,17 @@ main = do
             putStrLn $ "Using API Key: " ++ show token
 
             -- Threading
-            _ <- forkIO $ doPeriodically 2 getCurrentPrice "TSLA" token
+            --_ <- forkIO $ doPeriodically 2 getQuote "TSLA" token
 
             -- Testing API ...
-            --getCurrentPrice "TSLA" token
+            --getQuote "TSLA" token
             --getCompanyProfile "TSLA" token
             -- This one takes a while ...
             --getSupportedStocks "US" "USD" token
+            --getMarketNews General token
+            let fromDate = FormattedDate 1 12 2020
+            let toDate = FormattedDate 30 12 2020
+            getCompanyNews "TSLA" fromDate toDate token
 
             -- Block for a while
             sleepSeconds 120
