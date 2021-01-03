@@ -1,9 +1,11 @@
 {-|
-  StockRecord.hs
-  This file contains logic for maintaining the main data structure containing stocks prices (and info)
+    StockRecord.hs
+    This file contains logic for maintaining the main data structure containing stocks prices (and info)
 -}
 module StockRecord (
+    -- * Functions
     updateStockPrices,
+    -- * Types
     StockRecordData(..)
 ) where
 
@@ -13,11 +15,15 @@ import JSONTypes
 import qualified StmContainers.Map as STMMap
 import GHC.Conc
 
+-- |Master record custom type
 type StockRecordData = STMMap.Map String [Double]
 
 
 -- |Update stock prices
-updateStockPrices ::  StockRecordData -> String -> String -> IO ()
+updateStockPrices :: StockRecordData -- ^ Record object to update (ref)
+                  -> String          -- ^ Stock symbol to query for
+                  -> String          -- ^ API token
+                  -> IO ()           -- ^ Context
 updateStockPrices recordRef symbol token = do
     -- Fetch price
     maybePriceQuote <- getQuote symbol token
