@@ -1,3 +1,8 @@
+{-|
+  Lib.hs
+  This is the main library module that provides a direct interface to quering the web for any
+  stock data
+-}
 {-# LANGUAGE OverloadedStrings, DeriveDataTypeable  #-}
 module Lib (
     readApiKey,
@@ -7,6 +12,7 @@ module Lib (
     getSupportedStocks,
     getMarketNews,
     getCompanyNews,
+    getCompanyNewsSentiment,
     MarketNewsCategory (..),
     FormattedDate (..)
 ) where
@@ -60,12 +66,13 @@ instance Ord FormattedDate where
                 else compare d d'
 
 -- | ------------ URLs ------------------
-testGetURL            = "http://httpbin.org/get"
-finnhubQuoteURL       = "https://finnhub.io/api/v1/quote"
-finnhubProfileURL     = "https://finnhub.io/api/v1/stock/profile2"
-finnhubSuppStocksURL  = "https://finnhub.io/api/v1/stock/symbol"
-finnhubMarketNewsURL  = "https://finnhub.io/api/v1/news"
-finnhubCompanyNewsURL = "https://finnhub.io/api/v1/company-news"
+testGetURL              = "http://httpbin.org/get"
+finnhubQuoteURL         = "https://finnhub.io/api/v1/quote"
+finnhubProfileURL       = "https://finnhub.io/api/v1/stock/profile2"
+finnhubSuppStocksURL    = "https://finnhub.io/api/v1/stock/symbol"
+finnhubMarketNewsURL    = "https://finnhub.io/api/v1/news"
+finnhubCompanyNewsURL   = "https://finnhub.io/api/v1/company-news"
+finnhubNewsSentimentURL = "https://finnhub.io/api/v1/news-sentiment"
 
 -- | ------------ API -------------------
 
@@ -84,12 +91,15 @@ wreqHello = do
 
 -- |Get a Quote for a single stock
 -- API doc: https://finnhub.io/docs/api#quote
-getQuote :: String -> String -> IO ()
+getQuote :: String -> String -> IO (Maybe Quote)
 getQuote symbol token = do
-    let opts = defaults & param "symbol" .~ [DataText.pack symbol]
-                        & param "token"  .~ [DataText.pack token]
-    response <- asJSON =<< getWith opts finnhubQuoteURL :: IO QuoteResp
-    putStrLn $ show $ response ^? responseBody
+    response <- asJSON =<< getWith options finnhubQuoteURL :: IO QuoteResp
+    let maybeRespBody = response ^? responseBody
+    return maybeRespBody
+    
+    where
+        options = defaults & param "symbol" .~ [DataText.pack symbol]
+                           & param "token"  .~ [DataText.pack token]
 
 
 -- |Query general profile of a company
@@ -124,7 +134,7 @@ getMarketNews category token = do
     putStrLn $ show $ response ^? responseBody
 
 -- |Get company news for a given period
--- Note: This only works for NA companies
+-- Note: This only works for US companies
 -- API doc: https://finnhub.io/docs/api#company-news
 getCompanyNews :: String -> FormattedDate -> FormattedDate -> String -> IO ()
 getCompanyNews symbol fromDate toDate token = do
@@ -142,3 +152,12 @@ getCompanyNewsStr symbol fromDate toDate token = do
     putStrLn $ show $ response ^? responseBody
 
 
+-- |Get news sentiment for a company
+-- Note: This only works for US companies
+-- API doc: https://finnhub.io/docs/api#news-sentiment
+getCompanyNewsSentiment :: String -> String -> IO ()
+getCompanyNewsSentiment symbol token = do
+    let opts = defaults & param "symbol" .~ [DataText.pack symbol]
+                        & param "token"  .~ [DataText.pack token]
+    response <- asJSON =<< getWith opts finnhubNewsSentimentURL :: IO CompanyNewsSentimentResp
+    putStrLn $ show $ response ^? responseBody

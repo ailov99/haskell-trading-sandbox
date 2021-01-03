@@ -1,3 +1,7 @@
+{-|
+  JSONTypes.hs
+  This file contains logic for parsing the JSON web responses containing stock market information 
+-}
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, DuplicateRecordFields, TemplateHaskell #-}
 module JSONTypes where
 
@@ -93,3 +97,42 @@ instance ToJSON MarketNews where
 instance FromJSON MarketNews
 
 type MarketNewsResp = Response ([MarketNews])
+
+
+-- |News Sentiment and stats for a company
+data CompanyNewsSentiment = CompanyNewsSentiment {
+    buzz                        :: CompanyNewsStats,
+    companyNewsScore            :: Double,
+    sectorAverageBullishPercent :: Double,
+    sectorAverageNewsScore      :: Double,
+    sentiment                   :: NewsSentiment,
+    symbol                      :: Text
+} deriving (Generic, Show)
+
+instance ToJSON CompanyNewsSentiment where
+    toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON CompanyNewsSentiment
+
+type CompanyNewsSentimentResp = Response (CompanyNewsSentiment)
+
+data CompanyNewsStats = CompanyNewsStats {
+    articlesInLastWeek :: Int,
+    buzz             :: Double,
+    weeklyAverage    :: Double
+} deriving (Generic, Show)
+
+instance ToJSON CompanyNewsStats where
+    toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON CompanyNewsStats
+
+data NewsSentiment = NewsSentiment {
+    bearishPercent :: Double,
+    bullishPercent :: Double
+} deriving (Generic, Show) 
+
+instance ToJSON NewsSentiment where
+    toEncoding = genericToEncoding defaultOptions
+
+instance FromJSON NewsSentiment

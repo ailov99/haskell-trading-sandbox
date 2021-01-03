@@ -5,7 +5,10 @@ import Control.Concurrent (forkIO)
 
 import Lib
 import Threading
+import StockRecord
 
+import qualified StmContainers.Map as STMMap
+import GHC.Conc
 
 main :: IO ()
 main = do
@@ -25,17 +28,8 @@ main = do
             putStrLn $ "Using API Key: " ++ show token
 
             -- Threading
-            --_ <- forkIO $ doPeriodically 2 getQuote "TSLA" token
-
-            -- Testing API ...
-            --getQuote "TSLA" token
-            --getCompanyProfile "TSLA" token
-            -- This one takes a while ...
-            --getSupportedStocks "US" "USD" token
-            --getMarketNews General token
-            let fromDate = FormattedDate 1 12 2020
-            let toDate = FormattedDate 30 12 2020
-            getCompanyNews "TSLA" fromDate toDate token
+            aMap <- STMMap.newIO
+            _ <- asyncForkStockPriceUpdates aMap 5 "TSLA" token
 
             -- Block for a while
             sleepSeconds 120

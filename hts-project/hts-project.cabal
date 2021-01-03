@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 41b8cecad259c51dfe8c6dd039cff0d1a6b95d9121f4c0ad1bdaafcf3fc74f06
+-- hash: 32c6eb7f566170deafc5707272e125037c5e2c3ee402376669266831c941a076
 
 name:           hts-project
 version:        0.1.0.0
@@ -28,6 +28,7 @@ library
   exposed-modules:
       JSONTypes
       Lib
+      StockRecord
       Threading
   other-modules:
       Paths_hts_project
@@ -41,6 +42,10 @@ library
     , containers
     , lens
     , lens-aeson
+    , primitive-extras >=0.8 && <0.9
+    , primitive-unlifted >=0.1.1.0 && <0.2
+    , stm-containers
+    , stm-hamt >=1.2 && <1.3
     , text
     , wreq
   default-language: Haskell2010
@@ -60,6 +65,10 @@ executable hts-project-exe
     , hts-project
     , lens
     , lens-aeson
+    , primitive-extras >=0.8 && <0.9
+    , primitive-unlifted >=0.1.1.0 && <0.2
+    , stm-containers
+    , stm-hamt >=1.2 && <1.3
     , text
     , wreq
   default-language: Haskell2010
@@ -80,6 +89,10 @@ test-suite hts-project-test
     , hts-project
     , lens
     , lens-aeson
+    , primitive-extras >=0.8 && <0.9
+    , primitive-unlifted >=0.1.1.0 && <0.2
+    , stm-containers
+    , stm-hamt >=1.2 && <1.3
     , text
     , wreq
   default-language: Haskell2010
