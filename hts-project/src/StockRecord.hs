@@ -1,6 +1,8 @@
 {-|
-    StockRecord.hs
-    This file contains logic for maintaining the main data structure containing stocks prices (and info)
+Module      : StockRecord
+Description : This module contains logic for maintaining the main data structure containing stocks prices (and info)
+Stability   : experimental
+Portability : POSIX
 -}
 module StockRecord (
     -- * Functions

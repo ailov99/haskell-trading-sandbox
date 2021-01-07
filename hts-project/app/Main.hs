@@ -1,3 +1,9 @@
+{-|
+Module      : Main
+Description : Main driver module
+Stability   : experimental
+Portability : POSIX
+-}
 module Main where
 
 import System.IO.Error
@@ -10,7 +16,8 @@ import StockRecord
 import qualified StmContainers.Map as STMMap
 import GHC.Conc
 
-main :: IO ()
+-- | Main driver
+main :: IO () -- ^ Context
 main = do
     -- Read in the API key from the local system
     apiKey <- tryIOError readApiKey

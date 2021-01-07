@@ -1,10 +1,13 @@
 {-|
-  Lib.hs
-  This is the main library module that provides a direct interface to quering the web for any
-  stock data
+Module      : Lib
+Description : This is the main library module that provides a direct interface to quering the web for any
+              stock data 
+Stability   : experimental
+Portability : POSIX
 -}
 {-# LANGUAGE OverloadedStrings, DeriveDataTypeable  #-}
 module Lib (
+    -- * Functions
     readApiKey,
     wreqHello,
     getQuote,
@@ -13,6 +16,7 @@ module Lib (
     getMarketNews,
     getCompanyNews,
     getCompanyNewsSentiment,
+    -- * Types
     MarketNewsCategory (..),
     FormattedDate (..)
 ) where
@@ -30,7 +34,8 @@ import Control.Lens
 import Data.Aeson
 import Data.Data
 
--- | ------------ Enumerated types ------
+
+-- | Enumerated types
 data MarketNewsCategory = General | Forex | Crypto | Merger deriving (Eq, Show, Data, Typeable)
 parseMarketNewsCategory :: MarketNewsCategory -> String 
 parseMarketNewsCategory category = case category of
@@ -39,7 +44,8 @@ parseMarketNewsCategory category = case category of
     Crypto  -> "crypto"
     Merger  -> "merger"
 
--- | ------------ Custom types ----------
+
+-- | Custom types
 data FormattedDate = FormattedDate {
     day   :: Int,
     month :: Int,
@@ -65,7 +71,7 @@ instance Ord FormattedDate where
                 then compare m m'
                 else compare d d'
 
--- | ------------ URLs ------------------
+-- | URL Strings
 testGetURL              = "http://httpbin.org/get"
 finnhubQuoteURL         = "https://finnhub.io/api/v1/quote"
 finnhubProfileURL       = "https://finnhub.io/api/v1/stock/profile2"
@@ -76,22 +82,24 @@ finnhubNewsSentimentURL = "https://finnhub.io/api/v1/news-sentiment"
 
 -- | ------------ API -------------------
 
--- |Reads in the API ket from a system environment variable
-readApiKey :: IO String
+-- | Reads in the API ket from a system environment variable
+readApiKey :: IO String -- ^ API Key String
 readApiKey = getEnv "FinnhubApiKey"
 
 
--- |Dummy function with a simple wreq GET to test lib is working
-wreqHello :: IO ()
+-- | Dummy function with a simple wreq GET to test lib is working
+wreqHello :: IO () -- ^ Context
 wreqHello = do
     response <- get testGetURL
     -- expecting "application/json"
     ByteString.putStrLn $ response ^. responseHeader "Content-Type"
 
 
--- |Get a Quote for a single stock
--- API doc: https://finnhub.io/docs/api#quote
-getQuote :: String -> String -> IO (Maybe Quote)
+-- | Get a Quote for a single stock
+-- API doc: <https://finnhub.io/docs/api#quote>
+getQuote :: String           -- ^ Stock symbol
+         -> String           -- ^ API Token
+         -> IO (Maybe Quote) -- ^ Response Data
 getQuote symbol token = do
     response <- asJSON =<< getWith options finnhubQuoteURL :: IO QuoteResp
     let maybeRespBody = response ^? responseBody
@@ -102,9 +110,11 @@ getQuote symbol token = do
                            & param "token"  .~ [DataText.pack token]
 
 
--- |Query general profile of a company
--- API doc: https://finnhub.io/docs/api#company-profile2
-getCompanyProfile :: String -> String -> IO ()
+-- | Query general profile of a company
+-- API doc: <https://finnhub.io/docs/api#company-profile2>
+getCompanyProfile :: String -- ^ Stock symbol 
+                  -> String -- ^ API Token
+                  -> IO ()  -- ^ Context
 getCompanyProfile symbol token = do
     let opts = defaults & param "symbol" .~ [DataText.pack symbol]
                         & param "token"  .~ [DataText.pack token]
@@ -112,9 +122,12 @@ getCompanyProfile symbol token = do
     putStrLn $ show $ response ^? responseBody    
 
 
--- |Query for all supported stocks
--- API doc: https://finnhub.io/docs/api#stock-symbols
-getSupportedStocks :: String -> String -> String -> IO ()
+-- | Query for all supported stocks
+-- API doc: <https://finnhub.io/docs/api#stock-symbols>
+getSupportedStocks :: String -- ^ Exchange name
+                   -> String -- ^ Currency abbreviation
+                   -> String -- ^ API Token
+                   -> IO ()  -- ^ Context
 getSupportedStocks exchange currency token = do
     let opts = defaults & param "exchange" .~ [DataText.pack exchange]
                         & param "currency" .~ [DataText.pack currency]
@@ -123,9 +136,11 @@ getSupportedStocks exchange currency token = do
     putStrLn $ show $ response ^? responseBody
 
 
--- |Get latest market news
--- API doc: https://finnhub.io/docs/api#market-news
-getMarketNews :: MarketNewsCategory -> String -> IO ()
+-- | Get latest market news
+-- API doc: <https://finnhub.io/docs/api#market-news>
+getMarketNews :: MarketNewsCategory -- ^ News category enum
+              -> String             -- ^ API Token
+              -> IO ()              -- ^ Context
 getMarketNews category token = do
     let categoryString = parseMarketNewsCategory category
     let opts = defaults & param "category" .~ [DataText.pack categoryString]
@@ -133,16 +148,26 @@ getMarketNews category token = do
     response <- asJSON =<< getWith opts finnhubMarketNewsURL :: IO MarketNewsResp
     putStrLn $ show $ response ^? responseBody
 
--- |Get company news for a given period
+
+-- | Get company news for a given period
 -- Note: This only works for US companies
--- API doc: https://finnhub.io/docs/api#company-news
-getCompanyNews :: String -> FormattedDate -> FormattedDate -> String -> IO ()
+-- API doc: <https://finnhub.io/docs/api#company-news>
+getCompanyNews :: String         -- ^ Stock symbol
+               -> FormattedDate  -- ^ From Date enum
+               -> FormattedDate  -- ^ To Date enum
+               -> String         -- ^ API Token
+               -> IO ()          -- ^ Context
 getCompanyNews symbol fromDate toDate token = do
     let fromDateStr = show fromDate
     let toDateStr = show toDate
     getCompanyNewsStr symbol fromDateStr toDateStr token
 
-getCompanyNewsStr :: String -> String -> String -> String -> IO ()
+-- | Helper for fetching company news
+getCompanyNewsStr :: String -- ^ Stock symbol
+                  -> String -- ^ From Date dd-mm-yyyy
+                  -> String -- ^ To Date dd-mm-yyyy
+                  -> String -- ^ API Token
+                  -> IO ()  -- ^ Context
 getCompanyNewsStr symbol fromDate toDate token = do
     let opts = defaults & param "symbol" .~ [DataText.pack symbol]
                         & param "from"   .~ [DataText.pack fromDate]
@@ -152,10 +177,12 @@ getCompanyNewsStr symbol fromDate toDate token = do
     putStrLn $ show $ response ^? responseBody
 
 
--- |Get news sentiment for a company
+-- | Get news sentiment for a company
 -- Note: This only works for US companies
--- API doc: https://finnhub.io/docs/api#news-sentiment
-getCompanyNewsSentiment :: String -> String -> IO ()
+-- API doc: <https://finnhub.io/docs/api#news-sentiment>
+getCompanyNewsSentiment :: String -- ^ Stock symbol
+                        -> String -- ^ API Token
+                        -> IO ()  -- ^ Context
 getCompanyNewsSentiment symbol token = do
     let opts = defaults & param "symbol" .~ [DataText.pack symbol]
                         & param "token"  .~ [DataText.pack token]

@@ -1,6 +1,8 @@
 {-|
-  JSONTypes.hs
-  This file contains logic for parsing the JSON web responses containing stock market information 
+Module      : JSONTypes
+Description : This module contains logic for parsing the JSON web responses containing stock market information 
+Stability   : experimental
+Portability : POSIX
 -}
 {-# LANGUAGE OverloadedStrings, DeriveGeneric, DuplicateRecordFields, TemplateHaskell #-}
 module JSONTypes where
@@ -12,7 +14,7 @@ import Network.Wreq
 import Data.Text
 import Control.Monad
 
-
+-- | Readability type aliases
 type URL           = Text
 type DateAsText    = Text
 type NumAsText     = Text
@@ -20,7 +22,7 @@ type UNIXTimestamp = Int
 type ID            = Int
 
 
--- |Quote
+-- | Quote
 data Quote = Quote {
     o  :: Double,  -- Open
     h  :: Double,  -- High
@@ -29,15 +31,18 @@ data Quote = Quote {
     pc :: Double   -- Previous Close
 } deriving (Generic, Show)
 
+-- | Quote to JSON
 instance ToJSON Quote where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to Quote
 instance FromJSON Quote
 
+-- | HTTP Quote response
 type QuoteResp = Response (Quote)
 
 
--- |Company Profile
+-- | Company Profile
 data CompanyProfile = CompanyProfile {
     country              :: Text,
     currency             :: Text,
@@ -53,15 +58,18 @@ data CompanyProfile = CompanyProfile {
     finnhubIndustry      :: Text
 } deriving (Generic, Show)
 
+-- | Company Profile to JSON
 instance ToJSON CompanyProfile where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to Company profile
 instance FromJSON CompanyProfile
 
+-- | HTTP Company Profile Response
 type CompanyProfileResp = Response (CompanyProfile)
 
 
--- |Supported Stock
+-- | Supported Stock
 data SupportedStock = SupportedStock {
     currency      :: Text,
     description   :: Text,
@@ -75,6 +83,7 @@ data SupportedStock = SupportedStock {
 -- Hack default options as the "type" JSON field clashes with the type keyword...
 $(deriveJSON defaultOptions {fieldLabelModifier = \x -> if x == "stock_type" then "type" else x} ''SupportedStock)
 
+-- | Supported Stock Response
 type SupportedStockResp = Response ([SupportedStock])
 
 
@@ -91,15 +100,18 @@ data MarketNews = MarketNews {
     url      :: URL
 } deriving (Generic, Show)
 
+-- | Market News to JSON
 instance ToJSON MarketNews where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to Market News
 instance FromJSON MarketNews
 
+-- | Market News HTTP Response
 type MarketNewsResp = Response ([MarketNews])
 
 
--- |News Sentiment and stats for a company
+-- | News Sentiment and stats for a company
 data CompanyNewsSentiment = CompanyNewsSentiment {
     buzz                        :: CompanyNewsStats,
     companyNewsScore            :: Double,
@@ -109,30 +121,41 @@ data CompanyNewsSentiment = CompanyNewsSentiment {
     symbol                      :: Text
 } deriving (Generic, Show)
 
+-- | Company News Sentiment to JSON
 instance ToJSON CompanyNewsSentiment where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to Company News Sentiment
 instance FromJSON CompanyNewsSentiment
 
+-- | Company News Sentiment HTTP Response
 type CompanyNewsSentimentResp = Response (CompanyNewsSentiment)
 
+
+-- | Company News
 data CompanyNewsStats = CompanyNewsStats {
     articlesInLastWeek :: Int,
     buzz             :: Double,
     weeklyAverage    :: Double
 } deriving (Generic, Show)
 
+-- | Company News to JSON
 instance ToJSON CompanyNewsStats where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to Company News
 instance FromJSON CompanyNewsStats
 
+
+-- | News Sentiment
 data NewsSentiment = NewsSentiment {
     bearishPercent :: Double,
     bullishPercent :: Double
 } deriving (Generic, Show) 
 
+-- | News Sentiment to JSON
 instance ToJSON NewsSentiment where
     toEncoding = genericToEncoding defaultOptions
 
+-- | JSON to News Sentiment
 instance FromJSON NewsSentiment
