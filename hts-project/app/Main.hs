@@ -4,10 +4,12 @@ Description : Main driver module
 Stability   : experimental
 Portability : POSIX
 -}
+{-# LANGUAGE QuasiQuotes #-}
 module Main where
 
 import System.IO.Error
 import Control.Concurrent (forkIO)
+import Text.RawString.QQ
 
 import Lib
 import Threading
@@ -15,6 +17,27 @@ import StockRecord
 
 import qualified StmContainers.Map as STMMap
 import GHC.Conc
+
+
+-- | User menu string
+userMenuString :: String
+userMenuString = [r|
+Please select an option:
+q - quit
+|]
+
+
+-- | User input loop
+userInputLoop :: IO () -- ^ Context
+userInputLoop = do
+    putStrLn userMenuString
+    userIn <- getLine
+
+    case userIn of
+        "q" -> return ()
+        _   -> userInputLoop 
+
+
 
 -- | Main driver
 main :: IO () -- ^ Context
@@ -35,11 +58,17 @@ main = do
             putStrLn $ "Using API Key: " ++ show token
 
             -- Threading
-            aMap <- STMMap.newIO
-            _ <- asyncForkStockPriceUpdates aMap 5 "TSLA" token
+            --aMap <- STMMap.newIO
+            --_ <- asyncForkStockPriceUpdates aMap 5 "TSLA" token
+            --_ <- asyncForkStockPriceUpdates aMap 3 "GME" token
+            --let tickerSymbols = ["TSLA", "GME"]
+            --launchAsyncWorkersForTickerSymbols aMap 5 tickerSymbols token
 
-            -- Block for a while
-            sleepSeconds 120
+            userInputLoop
+
+            -- Shut down in 10 seconds
+            putStr "Shutting down"
+            shutDown 10
 
             
 

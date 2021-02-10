@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 32c6eb7f566170deafc5707272e125037c5e2c3ee402376669266831c941a076
+-- hash: 83e34844f17f1e64fab61f636168ef7c4a5572b800ad7c93d730e75dd1144138
 
 name:           hts-project
 version:        0.1.0.0
@@ -34,7 +34,7 @@ library
       Paths_hts_project
   hs-source-dirs:
       src
-  default-extensions: OverloadedStrings DeriveGeneric DuplicateRecordFields TemplateHaskell
+  default-extensions: OverloadedStrings DeriveGeneric DuplicateRecordFields TemplateHaskell QuasiQuotes
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -44,6 +44,7 @@ library
     , lens-aeson
     , primitive-extras >=0.8 && <0.9
     , primitive-unlifted >=0.1.1.0 && <0.2
+    , raw-strings-qq
     , stm-containers
     , stm-hamt >=1.2 && <1.3
     , text
@@ -67,6 +68,7 @@ executable hts-project-exe
     , lens-aeson
     , primitive-extras >=0.8 && <0.9
     , primitive-unlifted >=0.1.1.0 && <0.2
+    , raw-strings-qq
     , stm-containers
     , stm-hamt >=1.2 && <1.3
     , text
@@ -91,6 +93,7 @@ test-suite hts-project-test
     , lens-aeson
     , primitive-extras >=0.8 && <0.9
     , primitive-unlifted >=0.1.1.0 && <0.2
+    , raw-strings-qq
     , stm-containers
     , stm-hamt >=1.2 && <1.3
     , text

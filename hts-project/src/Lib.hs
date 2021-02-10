@@ -71,13 +71,21 @@ instance Ord FormattedDate where
                 then compare m m'
                 else compare d d'
 
+
 -- | URL Strings
-testGetURL              = "http://httpbin.org/get"
-finnhubQuoteURL         = "https://finnhub.io/api/v1/quote"
-finnhubProfileURL       = "https://finnhub.io/api/v1/stock/profile2"
-finnhubSuppStocksURL    = "https://finnhub.io/api/v1/stock/symbol"
-finnhubMarketNewsURL    = "https://finnhub.io/api/v1/news"
-finnhubCompanyNewsURL   = "https://finnhub.io/api/v1/company-news"
+testGetURL :: String
+testGetURL = "http://httpbin.org/get"
+finnhubQuoteURL :: String
+finnhubQuoteURL = "https://finnhub.io/api/v1/quote"
+finnhubProfileURL :: String
+finnhubProfileURL = "https://finnhub.io/api/v1/stock/profile2"
+finnhubSuppStocksURL :: String
+finnhubSuppStocksURL = "https://finnhub.io/api/v1/stock/symbol"
+finnhubMarketNewsURL :: String
+finnhubMarketNewsURL = "https://finnhub.io/api/v1/news"
+finnhubCompanyNewsURL :: String
+finnhubCompanyNewsURL = "https://finnhub.io/api/v1/company-news"
+finnhubNewsSentimentURL :: String
 finnhubNewsSentimentURL = "https://finnhub.io/api/v1/news-sentiment"
 
 -- | ------------ API -------------------

@@ -35,6 +35,8 @@ dependencies:
 - stm-hamt >=1.2 && <1.3
 - primitive-extras >=0.8 && <0.9
 - primitive-unlifted >=0.1.1.0 && <0.2
+# QuasiQuotes
+- raw-strings-qq
 
 library:
   source-dirs: src
@@ -43,6 +45,7 @@ library:
     - DeriveGeneric
     - DuplicateRecordFields
     - TemplateHaskell
+    - QuasiQuotes
 
 executables:
   hts-project-exe:
